@@ -1,0 +1,112 @@
+<!-- templates/home.html -->
+{% extends 'base.html' %}
+{% block title %}Home – Adversarial AI Hub{% endblock %}
+
+{% block content %}
+  <!-- Hero / Intro -->
+  <header class="landing-hero d-flex align-items-center text-center">
+    <div class="container py-5 text-white">
+      <h1 class="display-3 fw-bold">Adversarial AI Hub</h1>
+      <p class="lead mb-4">Protecting and Testing Your Deep Learning Models</p>
+      <a href="#what-we-do" class="btn btn-light btn-lg rounded-pill shadow">
+        Learn More
+      </a>
+    </div>
+  </header>
+
+  <!-- What We Do -->
+  <section id="what-we-do" class="py-5">
+    <div class="container">
+      <h2 class="fw-bold mb-4 text-center">What We Do</h2>
+      <p class="text-center mb-5">
+        Welcome to Adversarial AI Hub, your go‑to platform for exploring both attacks and defenses on modern AI systems. Whether you work with computer vision, natural language processing, speech recognition, or large language models, our tools and research help you:
+      </p>
+      <div class="row gy-4">
+        <div class="col-md-4 text-center">
+          <i class="bi bi-bug fs-1 mb-2"></i>
+          <h5>Test Vulnerabilities</h5>
+          <p>Discover how small changes in input can fool your models.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <i class="bi bi-shield-lock fs-1 mb-2"></i>
+          <h5>Build Defenses</h5>
+          <p>Learn and apply strategies to make your AI more robust.</p>
+        </div>
+        <div class="col-md-4 text-center">
+          <i class="bi bi-bar-chart-line fs-1 mb-2"></i>
+          <h5>Compare Techniques</h5>
+          <p>See side‑by‑side results on multiple model types.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features -->
+  <section class="bg-light py-5">
+    <div class="container">
+      <h2 class="fw-bold mb-4 text-center">Key Features</h2>
+      <div class="row gy-4">
+        <div class="col-md-6">
+          <h5>Multi‑Domain Support</h5>
+          <ul>
+            <li>Object detection & segmentation</li>
+            <li>Text classification & LLM prompts</li>
+            <li>Speech‑to‑text attacks & defenses</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Interactive Demos</h5>
+          <ul>
+            <li>Try live attacks on sample images and text</li>
+            <li>Watch how defenses recover correct outputs</li>
+          </ul>
+        </div>
+      </div>
+      <div class="row gy-4 mt-4">
+        <div class="col-md-6">
+          <h5>Research & Tutorials</h5>
+          <ul>
+            <li>Step‑by‑step guides for each technique</li>
+            <li>Code examples in Python and Flask</li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <h5>Easy Deployment</h5>
+          <ul>
+            <li>Ready‑to‑use Flask backend</li>
+            <li>Simple API for integrating into your own projects</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Models Section -->
+  <section id="models" class="py-5">
+    <div class="container text-center">
+      <h2 class="fw-bold mb-4">Our Models</h2>
+      <div class="row justify-content-center">
+        <!-- U‑Net Card -->
+        <div class="col-sm-8 col-md-4">
+          <div class="card shadow-sm h-100">
+            <img
+              src="{{ url_for('static', filename='unet_demo.png') }}"
+              class="card-img-top"
+              alt="U‑Net Example"
+            >
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">U‑Net Segmentation</h5>
+              <p class="card-text flex-fill">
+                A popular convolutional network for fast and precise image segmentation.
+              </p>
+              <a href="/models/unet" class="btn btn-primary rounded-pill mt-3">
+                Try U‑Net &nbsp;<i class="bi bi-arrow-right-circle"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- /end card -->
+      </div>
+    </div>
+  </section>
+{% endblock %}

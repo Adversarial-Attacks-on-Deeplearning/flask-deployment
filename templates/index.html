@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Segmentation + Attack – Adversarial AI Hub{% endblock %}
+
+{% block content %}
+
+  <!-- Hero / Upload Section -->
+  <section class="hero d-flex flex-fill align-items-center text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-4">U‑Net Image Segmentation</h1>
+      <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
+        <div class="input-group input-group-lg w-50">
+          <input
+            type="file"
+            class="form-control me-2"
+            id="fileInput"
+            name="file"
+            accept="image/*"
+            required
+          >
+          <button
+            type="submit"
+            class="btn btn-light btn-segment rounded-pill shadow-lg"
+          >
+            <i class="bi bi-scissors me-2"></i>Segment
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Results & Attack Section -->
+  {% if orig_image %}
+  <section id="results-section" class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="mb-4">Results</h2>
+      <div class="row g-4 justify-content-center">
+        <!-- Original Image Card -->
+        <div class="col-sm-8 col-md-5">
+          <div class="card img-card shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="card-title mb-0">Original Image</h5>
+            </div>
+            <div class="card-body">
+              <img
+                src="{{ url_for('uploaded', filename=orig_image) }}"
+                alt="Original"
+                class="img-fluid"
+              >
+            </div>
+          </div>
+        </div>
+        <!-- Clean Mask Card -->
+        <div class="col-sm-8 col-md-5">
+          <div class="card img-card shadow-sm">
+            <div class="card-header bg-white border-0">
+              <h5 class="card-title mb-0">Segmentation Mask</h5>
+            </div>
+            <div class="card-body">
+              <img
+                src="{{ url_for('uploaded', filename=clean_mask) }}"
+                alt="Clean Mask"
+                class="img-fluid"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attack Form -->
+      <div class="mt-5">
+        <h3 class="mb-3">Apply Attack</h3>
+        <form action="{{ url_for('attack') }}" method="post" class="d-flex justify-content-center">
+          <input type="hidden" name="orig" value="{{ orig_image }}">
+          <input type="hidden" name="clean_mask" value="{{ clean_mask }}">
+          <div class="input-group input-group-lg w-50">
+            <select name="attack" class="form-select me-2" required>
+              <option value="none" selected>-- Select Attack --</option>
+              <option value="uap">Universal Adversarial Perturbation (UAP)</option>
+              <option value="deepfool">DeepFool</option>
+            </select>
+            <button type="submit" class="btn btn-secondary btn-segment rounded-pill shadow-lg">
+              <i class="bi bi-shield-exclamation me-2"></i>Apply
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Perturbed Results -->
+      {% if attack_applied %}
+      <div id="perturbed-section" class="mt-5">
+        <h2 class="mb-4">Perturbed Image & Mask</h2>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-8 col-md-5">
+            <div class="card img-card shadow-sm">
+              <div class="card-header bg-white border-0">
+                <h5 class="card-title mb-0">Perturbed Image</h5>
+              </div>
+              <div class="card-body">
+                <img
+                  src="{{ url_for('uploaded', filename=pert_image) }}"
+                  alt="Perturbed Image"
+                  class="img-fluid"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-8 col-md-5">
+            <div class="card img-card shadow-sm">
+              <div class="card-header bg-white border-0">
+                <h5 class="card-title mb-0">Perturbed Mask</h5>
+              </div>
+              <div class="card-body">
+                <img
+                  src="{{ url_for('uploaded', filename=pert_mask) }}"
+                  alt="Perturbed Mask"
+                  class="img-fluid"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Auto-scroll Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if attack_applied %}
+        document.getElementById('perturbed-section').scrollIntoView({behavior:'smooth'});
+      {% elif orig_image %}
+        document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+      {% endif %}
+    });
+  </script>
+
+{% endblock %}

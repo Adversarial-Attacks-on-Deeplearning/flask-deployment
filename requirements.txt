@@ -1,0 +1,5 @@
+Flask==2.2.5
+torch==2.0.1
+torchvision==0.15.2
+albumentations==2.0.3
+Pillow==10.0.0

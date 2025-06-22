@@ -1,0 +1,130 @@
+/* styles.css */
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #4e54c8, #8f94fb);
+    color: white;
+    height: 100vh;
+  }
+  
+  /* Button */
+  .btn-segment {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+  }
+  
+  /* Card hover effect */
+  .img-card {
+    transition: transform .2s, box-shadow .2s;
+  }
+  .img-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+  }
+  
+  /* Ensure both images share the same container size */
+  .card-body {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-body img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Fade-in for main content */
+  .main-content {
+    opacity: 0;
+    animation: fadeIn 1s ease-out 0.5s forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  
+  /* Navbar link styling and icons */
+  .navbar-nav .nav-link {
+    font-size: 1.25rem;
+    transition: color .3s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .navbar-nav .nav-link:hover {
+    color: #4e54c8;
+  }
+  .navbar-nav .nav-link i {
+    font-size: 1.3rem;
+  }
+  
+  /* Landing Hero */
+  .landing-hero {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .landing-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/static/hero-bg.jpg') center/cover no-repeat;
+    background-size: cover;
+    filter: blur(2px) brightness(0.6);
+    z-index: 0;
+  }
+  .landing-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+  .landing-hero .container {
+    position: relative;
+    z-index: 2;
+  }
+  .landing-hero h1 {
+    font-size: 5rem;
+  }
+  .landing-hero p.lead {
+    font-size: 1.75rem;
+    max-width: 800px;
+    margin: 0 auto 1.5rem;
+  }
+  
+  /* Section titles */
+  section h2 {
+    position: relative;
+    display: inline-block;
+  }
+  section h2::after {
+    content: '';
+    display: block;
+    height: 3px;
+    width: 50px;
+    background: #4e54c8;
+    margin: 8px auto 0;
+  }
+  
+  /* Card hover effect */
+  #models .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 1.5rem rgba(0,0,0,0.15);
+    transition: .3s;
+  }
+  
+  /* Footer */
+  footer {
+    font-size: 0.9rem;
+  }
+  
