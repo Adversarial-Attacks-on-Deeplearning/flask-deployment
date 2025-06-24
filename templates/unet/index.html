@@ -6,7 +6,7 @@
   <!-- Hero / Upload Section -->
   <section class="hero d-flex flex-fill align-items-center text-center">
     <div class="container">
-      <h1 class="display-4 fw-bold mb-4">U‑Net Image Segmentation</h1>
+      <h1 class="display-4 fw-bold mb-4">U-Net Image Segmentation</h1>
       <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
         <div class="input-group input-group-lg w-50">
           <input
@@ -42,7 +42,7 @@
             </div>
             <div class="card-body">
               <img
-                src="{{ url_for('uploaded', filename=orig_image) }}"
+                src="{{ url_for('static', filename='uploads/' ~ orig_image) }}"
                 alt="Original"
                 class="img-fluid"
               >
@@ -57,7 +57,7 @@
             </div>
             <div class="card-body">
               <img
-                src="{{ url_for('uploaded', filename=clean_mask) }}"
+                src="{{ url_for('static', filename='uploads/' ~ clean_mask) }}"
                 alt="Clean Mask"
                 class="img-fluid"
               >
@@ -69,7 +69,7 @@
       <!-- Attack Form -->
       <div class="mt-5">
         <h3 class="mb-3">Apply Attack</h3>
-        <form action="{{ url_for('attack') }}" method="post" class="d-flex justify-content-center">
+        <form action="{{ url_for('unet.attack') }}" method="post" class="d-flex justify-content-center">
           <input type="hidden" name="orig" value="{{ orig_image }}">
           <input type="hidden" name="clean_mask" value="{{ clean_mask }}">
           <div class="input-group input-group-lg w-50">
@@ -97,7 +97,7 @@
               </div>
               <div class="card-body">
                 <img
-                  src="{{ url_for('uploaded', filename=pert_image) }}"
+                  src="{{ url_for('static', filename='uploads/' ~ pert_image) }}"
                   alt="Perturbed Image"
                   class="img-fluid"
                 >
@@ -111,7 +111,7 @@
               </div>
               <div class="card-body">
                 <img
-                  src="{{ url_for('uploaded', filename=pert_mask) }}"
+                  src="{{ url_for('static', filename='uploads/' ~ pert_mask) }}"
                   alt="Perturbed Mask"
                   class="img-fluid"
                 >
