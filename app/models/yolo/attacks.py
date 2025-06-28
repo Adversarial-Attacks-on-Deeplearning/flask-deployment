@@ -282,7 +282,7 @@ def targeted_dag_attack(
     else:
         print("Attack failed: conditions not met.")
 
-    return image.detach(), success
+    return image.detach()
 
 
 def fool_detectors_attack(
@@ -292,7 +292,6 @@ def fool_detectors_attack(
     gamma=0.03,
     conf_threshold=0.5,
     lambda_reg=0.01,
-    target_classes=[11],
     device='cpu'
 ):
     """
@@ -328,6 +327,8 @@ def fool_detectors_attack(
     # The high-level model is used to check detection results (post-processing),
     # while the underlying (raw) model is used for gradient-based updates.
     high_level_model = YOLO(model_path)
+    results = high_level_model(str(image_path))
+    target_classes = results[0].boxes.cls.int().tolist()
     underlying_model = YOLO(model_path).model
     underlying_model.eval()  # Set to evaluation mode.
     # Disable gradient computations for the underlying model parameters.
@@ -350,13 +351,8 @@ def fool_detectors_attack(
     for iteration in range(num_iterations):
         # Forward pass: compute predictions using the raw model.
         raw_preds, _ = underlying_model(image)
-
-        # Rearrange predictions from shape [1, channels, N_boxes] to [1, N_boxes, channels].
         raw_preds = raw_preds.permute(0, 2, 1)
-        # Extract class logits; assuming the first 4 channels are box coordinates.
         class_logits = raw_preds[..., 4:]
-        # Convert logits to confidence scores using the sigmoid activation.
-        # Shape: [1, N_boxes, num_classes]
         conf_scores = class_logits.sigmoid()
 
         # Extract confidence scores for the target classes.
@@ -514,7 +510,7 @@ def optimize_patch(
     raw_model_path="yolov8n_road.pt",
     learning_rate=0.06,
     conf_th=0.5,
-    device="cuda"
+    device="cpu"
 ):
     """
     Optimize the adversarial patch using gradient descent.
@@ -1430,3 +1426,18 @@ def hop_skip_jump_attack(model, x_orig, epsilon=None, delta=0.1, batch_size=100,
     print(f"  Queries: {query_count}")
 
     return x_best
+
+
+MODULE_DIR = os.path.dirname(__file__)
+UAP_PATH = os.path.join(MODULE_DIR, "universal_delta_1_epsilon.pth")
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = 'cpu'
+delta_1 = torch.load(UAP_PATH,
+                     map_location=torch.device(device))
+
+
+def uap(image_path, device=device):
+    test_image = preprocess_image(image_path)
+    test_image = test_image.to(device)
+    adv = test_image+delta_1
+    return adv.detach()
