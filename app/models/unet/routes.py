@@ -6,7 +6,7 @@ import torch
 
 from .model import UNET, DoubleConv
 from .transforms import inference_transform, IMAGE_HEIGHT, IMAGE_WIDTH
-from .attack import uap_attack, deepfool_attack
+from .attack import uap_attack, deepfool_attack, FGSM_single_image, MI_fgsm_single_image, PGD_single_image
 from .utils import preprocess, compute_mask, tensor_to_pil, predict_mask_general
 
 
@@ -43,6 +43,9 @@ epsilon = uap["epsilon"]
 attack_funcs = {
     "uap": uap_attack,
     "deepfool": deepfool_attack,
+    'fgsm': FGSM_single_image,
+    'mi-fgsm': MI_fgsm_single_image,
+    'pgd': PGD_single_image
 }
 
 
