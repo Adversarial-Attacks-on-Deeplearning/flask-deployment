@@ -6,7 +6,7 @@ def uap_attack(inp, device, model, delta):
     return torch.clamp(inp + scaled_delta, 0, 1)
 
 
-def deepfool_attack(inp, device, model, delta=None, max_iter=30, overshoot=0.02):
+def deepfool_attack(inp, device, model, delta=None, max_iter=3, overshoot=0.5):
     target_mask = (torch.sigmoid(model(inp)) > 0.5).float()
     inp = inp.clone().detach().to(device)
     target_mask = target_mask.clone().detach().to(device)
@@ -28,7 +28,7 @@ def deepfool_attack(inp, device, model, delta=None, max_iter=30, overshoot=0.02)
             w = grad / (grad.norm() + 1e-8)
             r_i = (loss + 1e-4) * w
 
-            r_total = (r_total + r_i).clamp(-overshoot, overshoot)
+            r_total = (6 * r_total + r_i).clamp(-overshoot, overshoot)
             pert_inp = torch.clamp(inp + r_total, 0, 1).detach()
 
             loop_i += 1

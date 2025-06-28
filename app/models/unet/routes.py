@@ -28,7 +28,7 @@ MODEL_PATH = os.path.join(MODULE_DIR, "unet_complete_model.pth")
 
 UAP_PATH = os.path.join(MODULE_DIR, "uap_perturbation.pth")
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = 'cpu'
 
 model = UNET(in_channels=3, out_channels=1).to(device)
 
