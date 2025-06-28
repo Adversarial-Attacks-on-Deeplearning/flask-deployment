@@ -8,7 +8,9 @@ def create_app():
 
     # register each model blueprint
     from .models.unet.routes import unet_bp
+    from .models.yolo.routes import yolo_bp
     app.register_blueprint(unet_bp)
+    app.register_blueprint(yolo_bp)
 
     app.config['UPLOAD_FOLDER'] = os.path.join(app.static_folder, "uploads")
 

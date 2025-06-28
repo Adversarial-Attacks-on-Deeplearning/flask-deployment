@@ -1,4 +1,5 @@
 __pycache*
-static/uploads/*
+*static/uploads*
+app/models/static/uploads*
 env/
-*.pth
+*.pt*
