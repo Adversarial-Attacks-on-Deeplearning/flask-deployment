@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Traffic Sign Classification – Adversarial AI Hub{% endblock %}
+
+{% block content %}
+  <section class="hero d-flex flex-fill align-items-center text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-4">Traffic Sign Classifier</h1>
+      <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
+        <div class="input-group input-group-lg w-75">
+          <input type="file" name="file" class="form-control me-2" accept="image/*" required>
+          <select name="attack" class="form-select me-2">
+            <option value="" {% if not attack_applied %}selected{% endif %}>-- No Attack --</option>
+            <option value="fgsm" {% if selected_attack=='fgsm' %}selected{% endif %}>FGSM</option>
+            <option value="mi-fgsm" {% if selected_attack=='mi-fgsm' %}selected{% endif %}>MI-FGSM</option>
+            <option value="pgd" {% if selected_attack=='pgd' %}selected{% endif %}>PGD</option>
+          </select>
+          <select name="defense" class="form-select me-2">
+            <option value="" {% if not defense_applied %}selected{% endif %}>-- No Defense --</option>
+            <option value="defend" {% if defense_applied %}selected{% endif %}>Adversarial Training Defense</option>
+          </select>
+          <button type="submit" class="btn btn-light rounded-pill shadow-lg">
+            <i class="bi bi-shield-exclamation me-2"></i>
+            {% if defense_applied %}Re-run{% elif attack_applied %}Defend{% else %}Run{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  {% if filename %}
+  <section id="results-section" class="py-5 bg-light">
+    <div class="container text-center">
+      <h2 class="mb-4">Results</h2>
+      <div class="row g-4 justify-content-center">
+        <!-- Original -->
+        <div class="col-md-4">
+          <div class="card img-card shadow-sm">
+            <div class="card-header bg-white border-0"><h5 class="mb-0">Original</h5></div>
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" class="img-fluid mb-2">
+              <p>Class: <strong>{{ orig_label }}</strong></p>
+              <p>Conf: {{ (orig_conf*100)|round(2) }}%</p>
+            </div>
+          </div>
+        </div>
+
+        {% if attack_applied and pert_image %}
+        <!-- Perturbed -->
+        <div class="col-md-4">
+          <div class="card img-card shadow-sm">
+            <div class="card-header bg-white border-0"><h5 class="mb-0">Perturbed ({{ selected_attack }})</h5></div>
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='uploads/' ~ pert_image) }}" class="img-fluid mb-2">
+              <p>Class: <strong>{{ pert_label }}</strong></p>
+              <p>Conf: {{ (pert_conf*100)|round(2) }}%</p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if defense_applied and defense_image %}
+        <!-- Defended -->
+        <div class="col-md-4">
+          <div class="card img-card shadow-sm">
+            <div class="card-header bg-white border-0"><h5 class="mb-0">Defended ({{ selected_attack }})</h5></div>
+            <div class="card-body">
+              <img src="{{ url_for('static', filename='uploads/' ~ defense_image) }}" class="img-fluid mb-2">
+              <p>Class: <strong>{{ def_label }}</strong></p>
+              <p>Conf: {{ (def_conf*100)|round(2) }}%</p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if defense_applied %}
+        document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+      {% elif attack_applied %}
+        document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+      {% endif %}
+    });
+  </script>
+{% endblock %}
