@@ -81,32 +81,75 @@
     </div>
   </section>
 
-  <!-- Models Section -->
-  <section id="models" class="py-5">
-    <div class="container text-center">
-      <h2 class="fw-bold mb-4">Our Models</h2>
-      <div class="row justify-content-center">
-        <!-- U‑Net Card -->
-        <div class="col-sm-8 col-md-4">
-          <div class="card shadow-sm h-100">
-            <img
-              src="{{ url_for('static', filename='unet_demo.png') }}"
-              class="card-img-top"
-              alt="U‑Net Example"
-            >
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">U‑Net Segmentation</h5>
-              <p class="card-text flex-fill">
-                A popular convolutional network for fast and precise image segmentation.
-              </p>
-              <a href="/models/unet" class="btn btn-primary rounded-pill mt-3">
-                Try U‑Net &nbsp;<i class="bi bi-arrow-right-circle"></i>
-              </a>
-            </div>
+ <!-- Models Section -->
+<section id="models" class="py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Our Models</h2>
+    <div class="row justify-content-center g-4">
+      
+      <!-- U‑Net Card -->
+      <div class="col-sm-8 col-md-4">
+        <div class="card shadow-sm h-100 hover-translate">
+          <img
+            src="{{ url_for('static', filename='unet_demo.png') }}"
+            class="card-img-top"
+            alt="U‑Net Example"
+          >
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">U‑Net Segmentation</h5>
+            <p class="card-text flex-fill">
+              A popular convolutional network for fast and precise image segmentation.
+            </p>
+            <a href="/models/unet" class="btn btn-primary rounded-pill mt-3">
+              Try U‑Net&nbsp;<i class="bi bi-arrow-right-circle"></i>
+            </a>
           </div>
         </div>
-        <!-- /end card -->
       </div>
+      
+      <!-- YOLO Card -->
+      <div class="col-sm-8 col-md-4">
+        <div class="card shadow-sm h-100 hover-translate">
+          <img
+            src="{{ url_for('static', filename='yolo_demo.png') }}"
+            class="card-img-top"
+            alt="YOLO Example"
+          >
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">YOLO Object Detection</h5>
+            <p class="card-text flex-fill">
+              Real‑time detection of traffic signs and objects with lightning speed.
+            </p>
+            <a href="/models/yolo" class="btn btn-success rounded-pill mt-3">
+              Try YOLO&nbsp;<i class="bi bi-bounding-box-circles"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- EfficientNet Card -->
+      <div class="col-sm-8 col-md-4">
+        <div class="card shadow-sm h-100 hover-translate">
+          <img
+            src="{{ url_for('static', filename='efficientnet_demo.png') }}"
+            class="card-img-top"
+            alt="EfficientNet Example"
+          >
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">EfficientNet Classification</h5>
+            <p class="card-text flex-fill">
+              Scalable and accurate image classification with minimal parameters.
+            </p>
+            <a href="/models/efficientnet" class="btn btn-warning rounded-pill mt-3">
+              Try EfficientNet&nbsp;<i class="bi bi-bar-chart-line"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
+
+
 {% endblock %}
