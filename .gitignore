@@ -3,3 +3,4 @@ __pycache*
 app/models/static/uploads*
 env/
 *.pt*
+*.keras
