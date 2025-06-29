@@ -1,68 +1,69 @@
 {% extends 'base.html' %}
-{% block title %}YOLO Detection – Adversarial AI Hub{% endblock %}
+{% block title %}YOLO Detection + Attack – Adversarial AI Hub{% endblock %}
 
 {% block content %}
-  <section class="hero d-flex flex-fill align-items-center text-center">
-    <div class="container">
-      <h1 class="display-4 fw-bold mb-4">YOLO Traffic Sign Detection</h1>
-      <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
-        <div class="input-group input-group-lg w-50">
-          <input
-            type="file"
-            class="form-control me-2"
-            name="file"
-            accept="image/*"
-            required
-          >
-          <button
-            type="submit"
-            class="btn btn-light rounded-pill shadow-lg"
-          ><i class="bi bi-image me-2"></i>Detect</button>
-        </div>
-      </form>
-    </div>
-  </section>
+<section class="hero d-flex flex-fill align-items-center text-center">
+  <div class="container">
+    <h1 class="display-4 fw-bold mb-4">YOLO Traffic Sign Detection</h1>
+    <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
+      <div class="input-group input-group-lg w-75">
+        <input type="file" class="form-control me-2" name="file" accept="image/*" required>
+        <select name="attack" class="form-select me-2">
+          <option value="" {% if not selected_attack %}selected{% endif %}>-- No Attack --</option>
+          <option value="dis_dag" {% if selected_attack=='dis_dag' %}selected{% endif %}>Disappearance DAG Attack</option>
+          <option value="target_dag" {% if selected_attack=='target_dag' %}selected{% endif %}>Targeted DAG Attack</option>
+          <option value="fool" {% if selected_attack=='fool' %}selected{% endif %}>Fool Detectors Attack</option>
+          <option value="fgsm" {% if selected_attack=='fgsm' %}selected{% endif %}>FGSM</option>
+          <option value="uap" {% if selected_attack=='uap' %}selected{% endif %}>UAP</option>
+        </select>
+        <select name="defense" class="form-select me-2">
+          <option value="" {% if not defense_applied %}selected{% endif %}>-- No Defense --</option>
+          <option value="defend" {% if defense_applied %}selected{% endif %}>Adversarial Training Defense</option>
+        </select>
+        <button type="submit" class="btn btn-light rounded-pill shadow-lg">
+          <i class="bi bi-shield-exclamation me-2"></i>
+          {% if defense_applied %}Re-run{% elif attack_applied %}Defend{% else %}Run{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
-  {% if orig_image %}
-  <section id="results-section" class="py-5 bg-light">
-    <div class="container text-center">
-      <h2 class="mb-4">Detection Results</h2>
-      <div class="row g-4 justify-content-center">
-        <!-- Original -->
-        <div class="col-sm-8 col-md-5">
-          <div class="card shadow-sm">
-            <div class="card-header bg-white border-0">
-              <h5 class="mb-0">Original Image</h5>
-            </div>
-            <div class="card-body">
-              <img src="{{ url_for('static', filename='uploads/'~orig_image) }}"
-                   class="img-fluid" alt="Original">
-            </div>
+{% if orig_image %}
+<section id="results-section" class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-4">Results</h2>
+    <div class="row g-4 justify-content-center">
+      <!-- Input -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-0">
+            <h5 class="mb-0">{% if attack_applied %}Adversarial Image{% else %}Original Image{% endif %}</h5>
+          </div>
+          <div class="card-body">
+            <img src="{{ url_for('static', filename='uploads/' ~ (adv_image if attack_applied else orig_image)) }}" class="img-fluid">
           </div>
         </div>
-        <!-- Detected -->
-        <div class="col-sm-8 col-md-5">
-          <div class="card shadow-sm">
-            <div class="card-header bg-white border-0">
-              <h5 class="mb-0">Annotated Image</h5>
-            </div>
-            <div class="card-body">
-              <img src="{{ url_for('static', filename='uploads/'~det_image) }}"
-                   class="img-fluid" alt="Detections">
-            </div>
+      </div>
+      <!-- Detection Overlay -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white border-0"><h5 class="mb-0">Detection Overlay</h5></div>
+          <div class="card-body">
+            <img src="{{ url_for('static', filename='uploads/' ~ det_image) }}" class="img-fluid">
           </div>
         </div>
       </div>
     </div>
-  </section>
-  {% endif %}
+  </div>
+</section>
+{% endif %}
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      {% if orig_image %}
-        document.getElementById('results-section')
-                .scrollIntoView({behavior: 'smooth'});
-      {% endif %}
-    });
-  </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  {% if orig_image %}
+    document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
+  {% endif %}
+});
+</script>
 {% endblock %}
