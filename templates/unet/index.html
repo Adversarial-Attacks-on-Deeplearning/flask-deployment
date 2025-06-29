@@ -2,122 +2,101 @@
 {% block title %}Segmentation + Attack – Adversarial AI Hub{% endblock %}
 
 {% block content %}
-
-  <!-- Hero / Upload Section -->
+  <!-- Upload, Attack & Defense Section -->
   <section class="hero d-flex flex-fill align-items-center text-center">
     <div class="container">
       <h1 class="display-4 fw-bold mb-4">U-Net Image Segmentation</h1>
       <form method="post" enctype="multipart/form-data" class="d-flex justify-content-center">
-        <div class="input-group input-group-lg w-50">
+        <div class="input-group input-group-lg w-75">
           <input
             type="file"
-            class="form-control me-2"
-            id="fileInput"
             name="file"
+            class="form-control me-2"
             accept="image/*"
             required
           >
-          <button
-            type="submit"
-            class="btn btn-light btn-segment rounded-pill shadow-lg"
-          >
-            <i class="bi bi-scissors me-2"></i>Segment
+          <select name="attack" class="form-select me-2">
+            <option value="none" {% if selected_attack=='none' %}selected{% endif %}>-- No Attack --</option>
+            <option value="uap" {% if selected_attack=='uap' %}selected{% endif %}>UAP</option>
+            <option value="deepfool" {% if selected_attack=='deepfool' %}selected{% endif %}>DeepFool</option>
+            <option value="fgsm" {% if selected_attack=='fgsm' %}selected{% endif %}>FGSM</option>
+            <option value="mi-fgsm" {% if selected_attack=='mi-fgsm' %}selected{% endif %}>MI-FGSM</option>
+            <option value="pgd" {% if selected_attack=='pgd' %}selected{% endif %}>PGD</option>
+          </select>
+          <select name="defense" class="form-select me-2">
+            <option value="none" {% if not defense_applied %}selected{% endif %}>-- No Defense --</option>
+            <option value="defend" {% if defense_applied %}selected{% endif %}>Adversarial Training Defense</option>
+          </select>
+          <button type="submit" class="btn btn-light rounded-pill shadow-lg">
+            <i class="bi bi-shield-exclamation me-2"></i>{% if defense_applied %}Re-run{% elif attack_applied %}Defend{% else %}Run{% endif %}
           </button>
         </div>
       </form>
     </div>
   </section>
 
-  <!-- Results & Attack Section -->
   {% if orig_image %}
   <section id="results-section" class="py-5 bg-light">
     <div class="container text-center">
       <h2 class="mb-4">Results</h2>
       <div class="row g-4 justify-content-center">
-        <!-- Original Image Card -->
-        <div class="col-sm-8 col-md-5">
+        <!-- Original -->
+        <div class="col-md-4">
           <div class="card img-card shadow-sm">
             <div class="card-header bg-white border-0">
-              <h5 class="card-title mb-0">Original Image</h5>
+              <h5 class="mb-0">Original</h5>
             </div>
             <div class="card-body">
-              <img
-                src="{{ url_for('static', filename='uploads/' ~ orig_image) }}"
-                alt="Original"
-                class="img-fluid"
-              >
+              <img src="{{ url_for('static', filename='uploads/' ~ orig_image) }}" class="img-fluid mb-2">
             </div>
           </div>
         </div>
-        <!-- Clean Mask Card -->
-        <div class="col-sm-8 col-md-5">
+        <!-- Clean Mask -->
+        <div class="col-md-4">
           <div class="card img-card shadow-sm">
             <div class="card-header bg-white border-0">
-              <h5 class="card-title mb-0">Segmentation Mask</h5>
+              <h5 class="mb-0">Clean Mask</h5>
             </div>
             <div class="card-body">
-              <img
-                src="{{ url_for('static', filename='uploads/' ~ clean_mask) }}"
-                alt="Clean Mask"
-                class="img-fluid"
-              >
+              <img src="{{ url_for('static', filename='uploads/' ~ clean_mask) }}" class="img-fluid mb-2">
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Attack Form -->
-      <div class="mt-5">
-        <h3 class="mb-3">Apply Attack</h3>
-        <form action="{{ url_for('unet.attack') }}" method="post" class="d-flex justify-content-center">
-          <input type="hidden" name="orig" value="{{ orig_image }}">
-          <input type="hidden" name="clean_mask" value="{{ clean_mask }}">
-          <div class="input-group input-group-lg w-50">
-            <select name="attack" class="form-select me-2" required>
-              <option value="none" selected>-- Select Attack --</option>
-              <option value="uap">Universal Adversarial Perturbation (UAP)</option>
-              <option value="fgsm">FGSM</option>
-              <option value="mi-fgsm">MI-FGSM</option>
-              <option value="pgd">PGD</option>
-              <option value="deepfool">DeepFool</option>
-            </select>
-            <button type="submit" class="btn btn-secondary btn-segment rounded-pill shadow-lg">
-              <i class="bi bi-shield-exclamation me-2"></i>Apply
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Perturbed Results -->
       {% if attack_applied %}
       <div id="perturbed-section" class="mt-5">
-        <h2 class="mb-4">Perturbed Image & Mask</h2>
+        <h2 class="mb-4">Perturbed ({{ selected_attack }})</h2>
         <div class="row g-4 justify-content-center">
-          <div class="col-sm-8 col-md-5">
+          <div class="col-md-4">
             <div class="card img-card shadow-sm">
-              <div class="card-header bg-white border-0">
-                <h5 class="card-title mb-0">Perturbed Image</h5>
-              </div>
+              <div class="card-header bg-white border-0"><h5 class="mb-0">Perturbed Image</h5></div>
               <div class="card-body">
-                <img
-                  src="{{ url_for('static', filename='uploads/' ~ pert_image) }}"
-                  alt="Perturbed Image"
-                  class="img-fluid"
-                >
+                <img src="{{ url_for('static', filename='uploads/' ~ pert_image) }}" class="img-fluid mb-2">
               </div>
             </div>
           </div>
-          <div class="col-sm-8 col-md-5">
+          <div class="col-md-4">
             <div class="card img-card shadow-sm">
-              <div class="card-header bg-white border-0">
-                <h5 class="card-title mb-0">Perturbed Mask</h5>
-              </div>
+              <div class="card-header bg-white border-0"><h5 class="mb-0">Perturbed Mask</h5></div>
               <div class="card-body">
-                <img
-                  src="{{ url_for('static', filename='uploads/' ~ pert_mask) }}"
-                  alt="Perturbed Mask"
-                  class="img-fluid"
-                >
+                <img src="{{ url_for('static', filename='uploads/' ~ pert_mask) }}" class="img-fluid mb-2">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% if defense_applied %}
+      <div id="defended-section" class="mt-5">
+        <h2 class="mb-4">Defended Mask</h2>
+        <div class="row g-4 justify-content-center">
+          <div class="col-md-4">
+            <div class="card img-card shadow-sm">
+              <div class="card-header bg-white border-0"><h5 class="mb-0">Defense Output</h5></div>
+              <div class="card-body">
+                <img src="{{ url_for('static', filename='uploads/' ~ defense_mask) }}" class="img-fluid mb-2">
               </div>
             </div>
           </div>
@@ -128,15 +107,15 @@
   </section>
   {% endif %}
 
-  <!-- Auto-scroll Script -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      {% if attack_applied %}
+      {% if defense_applied %}
+        document.getElementById('defended-section').scrollIntoView({behavior:'smooth'});
+      {% elif attack_applied %}
         document.getElementById('perturbed-section').scrollIntoView({behavior:'smooth'});
       {% elif orig_image %}
         document.getElementById('results-section').scrollIntoView({behavior:'smooth'});
       {% endif %}
     });
   </script>
-
 {% endblock %}
